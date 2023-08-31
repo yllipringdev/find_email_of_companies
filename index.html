@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV Upload App</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+      
+        /* Style for the "Choose File" button */
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 4px;
+        }
+        .custom-file-upload:hover {
+            background-color: #ddd;
+        }
+
+        /* Style for the "Upload" button */
+        .submitbutton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submitbutton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script>
+         $(document).ready(function() {
+             $(".submitbutton").on('click', function() {
+                 $(".data_upload").css('display', 'block');
+             });
+ 
+             // Display the selected file name or "No file selected"
+             $('input[type="file"]').on('change', function() {
+                 var fileName = $(this).val().split('\\').pop();
+                 if (fileName === "") {
+                     $('.file-name').text("No file selected");
+                 } else {
+                     $('.file-name').text(fileName);
+                 }
+             });
+         });
+     </script>
+ </head>
+ <body>
+     <h1>Upload a CSV File</h1>
+     <!-- <a href="combined_results.csv" download>Click here to download</a> -->
+     <form id="upload-form" method="POST" enctype="multipart/form-data">
+         <label class="custom-file-upload">
+             <input type="file" name="file" accept=".csv">
+             Choose File
+         </label>
+         <span class="file-name">No file selected</span> <!-- Display selected file name -->
+         <input class="submitbutton" type="submit" value="Upload">
+         <p style="display:none" class="data_upload">Data is uploading, please wait...</p>
+     </form>
+ 
+     {% if uploaded_data %}
+     <h2>Uploaded Data</h2>
+     <table>
+         <thead>
+             <tr>
+                 <th>Company Name</th>
+                 <th>CEO Name</th>
+                 <th>CEO Email</th>
+                 <th>Website URL</th>
+                 <th>Email Source</th>
+             </tr>
+         </thead>
+         <tbody>
+             {% for row in uploaded_data %}
+             <tr>
+                 <td>{{ row[0] }}</td>
+                 <td>{{ row[1] }}</td>
+                 <td>{{ row[2] }}</td>
+                 <td><a href="{{ row[3] }}" target="_blank">{{ row[3] }}</a></td>
+                 <td>
+                    <a href="https://hunter.io" target="_blank">Hunter.io</a>
+                </td>                              
+             </tr>
+             {% endfor %}
+         </tbody>
+     </table>
+     {% endif %}
+ </body>
+ </html>
